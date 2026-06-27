@@ -500,6 +500,33 @@
     nav a { padding: 0 0.6rem; font-size: 0.76rem; }
     section { padding: 4rem 1rem 1.5rem; }
   }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* 每個子元素依序延遲 */
+  .reveal-group > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .reveal-group.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay: 0s;    }
+  .reveal-group.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay: 0.12s; }
+  .reveal-group.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay: 0.24s; }
+  .reveal-group.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay: 0.36s; }
+  .reveal-group.visible > *:nth-child(5) { opacity:1; transform:translateY(0); transition-delay: 0.48s; }
+  .reveal-group.visible > *:nth-child(6) { opacity:1; transform:translateY(0); transition-delay: 0.60s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-group > * { transition: none; opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -991,18 +1018,17 @@
 </footer>
 
 <script>
-  // Progress bar
+  // ── Progress bar ──
   const bar = document.getElementById('progress');
   window.addEventListener('scroll', () => {
     const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
     bar.style.width = pct + '%';
   });
 
-  // Active nav
+  // ── Active nav ──
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
-
-  const observer = new IntersectionObserver((entries) => {
+  const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         navLinks.forEach(a => {
@@ -1011,8 +1037,119 @@
       }
     });
   }, { threshold: 0.35 });
+  sections.forEach(s => navObserver.observe(s));
 
-  sections.forEach(s => observer.observe(s));
+  // ── Scroll reveal ──
+  // 自動標記所有要做滑入效果的元素（不用手動改 HTML）
+  const REVEAL_SELECTORS = [
+    '.card', '.highlight', '.takeaway-card',
+    'blockquote', '.big-stat', 'table',
+    '.timeline', '.tl-item',
+    '.compare', '.two-stats',
+    'h2', 'h3',
+    'section > p',
+  ];
+  // 群組類（子元素依序出現）
+  const GROUP_SELECTORS = [
+    '.three-cols', '.steps', '.stats-row', '.tags',
+  ];
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // 單一 reveal
+    REVEAL_SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        // hero section 裡的不做（已在畫面內）
+        if (!el.closest('#hero')) {
+          el.classList.add('reveal');
+        }
+      });
+    });
+
+    // 群組 reveal（子元素依序錯開）
+    GROUP_SELECTORS.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (!el.closest('#hero')) {
+          el.classList.add('reveal-group');
+        }
+      });
+    });
+
+    // Observer 觸發
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target); // 只動一次
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal, .reveal-group').forEach(el => {
+      revealObserver.observe(el);
+    });
+  });
+
+  // ── Count-up animation ──
+  // 設定每個 .val 和 .num 的目標數字與格式
+  const counters = [
+    // Hero stats
+    { sel: '.stat-pill.blue  .val', from: 0,   to: 4.2,  dec: 1, suffix: '%',   prefix: '3.5–' },
+    { sel: '.stat-pill.gold  .val', from: 0,   to: 3.3,  dec: 1, suffix: '%',   prefix: '' },
+    { sel: '.stat-pill.red   .val', from: 0,   to: 2,    dec: 0, suffix: '億人', prefix: '' },
+
+    // Loophole section — two big stats
+    { sel: '#loophole .two-stats .big-stat:nth-child(1) .num', from: 0, to: 300, dec: 0, suffix: '萬', prefix: '▼ ' },
+    { sel: '#loophole .two-stats .big-stat:nth-child(2) .num', from: 0, to: 300, dec: 0, suffix: '萬', prefix: '▲ ' },
+
+    // Taiwan — big stat
+    { sel: '#taiwan .big-stat .num', from: 0, to: 20, dec: 0, suffix: '萬+', prefix: '' },
+
+    // China — two big stats
+    { sel: '#china .two-stats .big-stat:nth-child(1) .num', from: 0, to: 2,  dec: 0, suffix: '億',  prefix: '' },
+    { sel: '#china .two-stats .big-stat:nth-child(2) .num', from: 0, to: 40, dec: 0, suffix: '%',   prefix: '' },
+  ];
+
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function animateCounter(el, from, to, dec, prefix, suffix, duration = 1800) {
+    const start = performance.now();
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOut(progress);
+      const current = from + (to - from) * eased;
+      el.textContent = prefix + current.toFixed(dec) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // 用 IntersectionObserver 觸發，每個元素只動一次
+  const animated = new Set();
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (animated.has(el)) return;
+      animated.add(el);
+
+      const cfg = counters.find(c => el.matches(c.sel));
+      if (cfg) {
+        animateCounter(el, cfg.from, cfg.to, cfg.dec, cfg.prefix, cfg.suffix);
+      }
+    });
+  }, { threshold: 0.6 });
+
+  // 頁面載入後綁定所有目標元素
+  window.addEventListener('DOMContentLoaded', () => {
+    counters.forEach(cfg => {
+      document.querySelectorAll(cfg.sel).forEach(el => {
+        countObserver.observe(el);
+      });
+    });
+  });
 </script>
 </body>
 </html>

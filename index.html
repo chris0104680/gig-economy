@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>失業率的真相與零工經濟的潛在危機</title>
+<style>
+  :root {
+    --bg:       #0d1b2a;
+    --surface:  #152235;
+    --surface2: #1c2e42;
+    --gold:     #e8b84b;
+    --red:      #e05c5c;
+    --blue:     #4bbfe8;
+    --green:    #4be87a;
+    --muted:    #7a90aa;
+    --text:     #dce8f5;
+    --radius:   12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Helvetica Neue', Arial, 'PingFang TC', 'Noto Sans TC', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(13,27,42,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232,184,75,0.2);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    padding: 0 0.9rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  nav a:hover, nav a.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 2rem;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 80px;
+    text-align: center;
+    position: relative;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--gold), var(--red));
+  }
+
+  .eyebrow {
+    display: inline-block;
+    background: var(--gold);
+    color: #0d1b2a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 0.3rem 1rem;
+    border-radius: 99px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin: 1.2rem auto 2.5rem;
+    max-width: 580px;
+  }
+
+  /* stats row */
+  .stats-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .stat-pill {
+    background: var(--surface);
+    border: 1.5px solid var(--surface2);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.8rem;
+    min-width: 150px;
+    text-align: center;
+  }
+  .stat-pill .val {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    display: block;
+  }
+  .stat-pill .lbl {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    display: block;
+  }
+  .stat-pill.blue  { border-color: var(--blue);  }
+  .stat-pill.blue  .val { color: var(--blue); }
+  .stat-pill.gold  { border-color: var(--gold);  }
+  .stat-pill.gold  .val { color: var(--gold); }
+  .stat-pill.red   { border-color: var(--red);   }
+  .stat-pill.red   .val { color: var(--red);  }
+  .stat-pill.green { border-color: var(--green); }
+  .stat-pill.green .val { color: var(--green);}
+
+  .scroll-hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%,100%{ transform: translateY(0); }
+    50%    { transform: translateY(6px); }
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--surface2);
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  p { color: var(--text); margin-bottom: 1rem; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--surface2);
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--gold); }
+
+  .card.blue  { border-left: 4px solid var(--blue); }
+  .card.gold  { border-left: 4px solid var(--gold); }
+  .card.red   { border-left: 4px solid var(--red);  }
+  .card.green { border-left: 4px solid var(--green);}
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    background: var(--surface2);
+    border: 1.5px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  .highlight::before {
+    content: attr(data-icon);
+    position: absolute;
+    top: -0.7rem;
+    left: 1.2rem;
+    background: var(--gold);
+    color: #0d1b2a;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.6rem;
+    border-radius: 99px;
+    letter-spacing: 0.05em;
+  }
+  .highlight p { color: var(--text); margin: 0; }
+
+  .highlight.danger {
+    border-color: var(--red);
+  }
+  .highlight.danger::before {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .highlight.info {
+    border-color: var(--blue);
+  }
+  .highlight.info::before {
+    background: var(--blue);
+    color: #0d1b2a;
+  }
+
+  /* ── BLOCKQUOTE ── */
+  blockquote {
+    border-left: 3px solid var(--gold);
+    padding: 0.8rem 1.2rem;
+    margin: 1.5rem 0;
+    background: var(--surface);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  /* ── TWO-COL COMPARE ── */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+
+  .compare-col {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    border: 1.5px solid var(--surface2);
+  }
+  .compare-col .ch { font-size: 0.72rem; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .compare-col.left  { border-color: var(--green); }
+  .compare-col.right { border-color: var(--gold);  }
+
+  /* ── NUMBER + TEXT ROWS ── */
+  .steps { margin: 1.5rem 0; }
+  .step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 0.9rem;
+    color: #0d1b2a;
+    background: var(--gold);
+  }
+  .step-num.blue  { background: var(--blue);  color: #0d1b2a; }
+  .step-num.red   { background: var(--red);   color: #fff; }
+  .step-num.green { background: var(--green); color: #0d1b2a; }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; color: #fff; margin-bottom: 0.2rem; }
+
+  /* ── BIG STAT CALLOUT ── */
+  .big-stat {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--surface);
+    border-radius: var(--radius);
+    margin: 1.5rem 0;
+    border: 1.5px solid var(--surface2);
+  }
+  .big-stat .num {
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1;
+    display: block;
+  }
+  .big-stat .desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+    display: block;
+  }
+
+  /* ── TWO BIG STATS ── */
+  .two-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 480px) { .two-stats { grid-template-columns: 1fr; } }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--gold);
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--surface2);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:hover td { background: var(--surface); }
+
+  /* ── TAG CHIPS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.7rem;
+    border-radius: 99px;
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--surface2);
+  }
+  .tag.gold  { border-color: var(--gold);  color: var(--gold); }
+  .tag.blue  { border-color: var(--blue);  color: var(--blue); }
+  .tag.red   { border-color: var(--red);   color: var(--red);  }
+  .tag.green { border-color: var(--green); color: var(--green);}
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; margin: 1.5rem 0; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 17px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--surface2);
+  }
+  .tl-item {
+    position: relative;
+    padding-left: 52px;
+    margin-bottom: 1.5rem;
+  }
+  .tl-dot {
+    position: absolute;
+    left: 0; top: 4px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 700; color: var(--gold);
+    z-index: 1;
+  }
+  .tl-dot.red   { border-color: var(--red);   color: var(--red);   }
+  .tl-dot.blue  { border-color: var(--blue);  color: var(--blue);  }
+  .tl-dot.green { border-color: var(--green); color: var(--green); }
+
+  /* ── THREE COLS ── */
+  .three-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 640px) { .three-cols { grid-template-columns: 1fr; } }
+
+  .col-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    text-align: center;
+    border: 1.5px solid var(--surface2);
+  }
+  .col-card .icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+  .col-card h4 { color: #fff; font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .col-card p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--surface2);
+    margin: 3rem 0;
+  }
+
+  /* ── CONCLUSION CARDS ── */
+  .takeaway-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    border: 1.5px solid var(--surface2);
+    transition: border-color 0.2s;
+  }
+  .takeaway-card:hover { border-color: var(--gold); }
+  .takeaway-num {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 1.2rem;
+  }
+  .takeaway-card .tkey {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 99px;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+  }
+  .takeaway-body h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+  .takeaway-body p { font-size: 0.92rem; margin: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--surface2);
+    text-align: center;
+    padding: 2rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── PROGRESS BAR ── */
+  #progress {
+    position: fixed;
+    top: 56px; left: 0;
+    height: 3px;
+    background: var(--gold);
+    z-index: 99;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    nav a { padding: 0 0.6rem; font-size: 0.76rem; }
+    section { padding: 4rem 1rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav id="nav">
+  <a href="#hero">🏠 首頁</a>
+  <a href="#loophole">🔍 統計漏洞</a>
+  <a href="#triangle">⚖️ 三角擠壓</a>
+  <a href="#taiwan">🛵 台灣現況</a>
+  <a href="#china">🌏 中國預警</a>
+  <a href="#ai">🤖 AI衝擊</a>
+  <a href="#takeaways">💡 三個觀念</a>
+</nav>
+
+<!-- ════════════════════════════════════════ HERO -->
+<section id="hero">
+  <div class="eyebrow">財商深度解析</div>
+  <h1>失業率的<em>真相</em><br>與零工經濟的<em>潛在危機</em></h1>
+  <p class="hero-sub">美台失業率創歷史低點，但為什麼大家都感覺「找工作很難」？<br>答案藏在一個你從來沒想過的地方。</p>
+
+  <div class="stats-row">
+    <div class="stat-pill blue">
+      <span class="val">3.5–4.2%</span>
+      <span class="lbl">美國失業率（歷史低點）</span>
+    </div>
+    <div class="stat-pill gold">
+      <span class="val">3.3%</span>
+      <span class="lbl">台灣失業率（歷史低點）</span>
+    </div>
+    <div class="stat-pill red">
+      <span class="val">2億人</span>
+      <span class="lbl">中國零工從業者（估計）</span>
+    </div>
+    <div class="stat-pill green">
+      <span class="val">▼≈▲</span>
+      <span class="lbl">美國失業↓300萬 = Uber司機↑300萬</span>
+    </div>
+  </div>
+
+  <p class="scroll-hint">↓ 向下捲動開始閱讀</p>
+</section>
+
+<!-- ════════════════════════════════════════ INTRO -->
+<section id="intro">
+  <div class="section-tag">核心問題</div>
+  <h2>官方數字與你的感受，為什麼差這麼多？</h2>
+
+  <p>美國與台灣的失業率都在歷史低點附近徘徊，如果你只看這個數字，會以為現在是找工作非常容易的年代。</p>
+  <p>但你打開任何一個社群平台，看到的都是：年輕人抱怨找不到工作、中年人遭遇大型裁員、上班族領著不漲的薪水、求職者投了幾百份履歷沒有下文。</p>
+
+  <div class="highlight" data-icon="🔑 核心答案">
+    <p>過去五年，美國失業人數確實減少了約 300 萬人，但同一段時間，光是 Uber 登記的司機數量就增加了約 300 萬人——<strong>兩個數字剛好抵消，抵消到小數點後都很接近</strong>。失業率的下降，並不是因為更多人找到了體面的工作，而是大量失業者去跑 Uber、外送，在統計上變成了「就業者」。</p>
+  </div>
+
+  <p>這就是今天要拆解的核心問題：全世界的失業率統計，正在被「零工經濟（Gig Economy）」系統性地扭曲，而這個扭曲背後，隱藏著一個比統計漏洞更嚴重的結構性危機。</p>
+
+  <div class="tags">
+    <span class="tag gold">失業率統計漏洞</span>
+    <span class="tag blue">平台三角擠壓</span>
+    <span class="tag">台灣外送員現況</span>
+    <span class="tag red">中國未來預警</span>
+    <span class="tag red">Robotaxi & AI衝擊</span>
+    <span class="tag green">三個應對觀念</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════ LOOPHOLE -->
+<section id="loophole">
+  <div class="section-tag">第一部分</div>
+  <h2>🔍 失業率統計的定義漏洞</h2>
+
+  <p>要搞懂失業率為什麼失真，要先知道它到底是怎麼算的。</p>
+
+  <h3>美國 BLS「失業者」須同時滿足三個條件</h3>
+  <div class="three-cols">
+    <div class="col-card">
+      <span class="icon">①</span>
+      <h4>目前沒有工作</h4>
+      <p>不能有任何有薪的工作活動</p>
+    </div>
+    <div class="col-card">
+      <span class="icon">②</span>
+      <h4>過去四週積極找工作</h4>
+      <p>必須有具體的求職行為記錄</p>
+    </div>
+    <div class="col-card">
+      <span class="icon">③</span>
+      <h4>現在可以立刻開始工作</h4>
+      <p>具備立即就業的意願與能力</p>
+    </div>
+  </div>
+
+  <p>三個條件缺少任何一個，你就不算「失業者」。不積極找工作的人算「離開勞動力」，不算失業；<strong>只要有任何有薪收入進帳，就算就業——不管每週做兩小時還是六十小時</strong>。</p>
+
+  <div class="highlight danger" data-icon="⚠️ 關鍵漏洞">
+    <p>Uber 司機符合就業條件嗎？當然符合。你只要註冊了司機帳號偶爾接單，你就從「沒工作」變成「就業者」。你可能一週只賺五百元、連油錢都賺不回來，可能每天工作十小時才勉強付得起房租，但在勞工統計局的眼裡，你跟一個年薪 100 萬的科技工程師，都是就業人口裡的一員。</p>
+  </div>
+
+  <h3 style="margin-top:2rem;">最震撼的數字對照（美國，2018–2023）</h3>
+
+  <div class="two-stats">
+    <div class="big-stat" style="border-color:var(--green)">
+      <span class="num" style="color:var(--green)">▼ 300萬</span>
+      <span class="desc">正規失業人數減少<br>（美國勞工統計局，五年）</span>
+    </div>
+    <div class="big-stat" style="border-color:var(--gold)">
+      <span class="num" style="color:var(--gold)">▲ 300萬</span>
+      <span class="desc">Uber 全球活躍司機增加<br>（Uber 官方財報，五年）</span>
+    </div>
+  </div>
+
+  <blockquote>兩個數字幾乎完全抵消，強烈暗示這兩群人高度重疊——從正規就業市場被裁走的人，直接填進了 Uber 的司機池，在統計上消失了。</blockquote>
+
+  <div class="card gold">
+    <h3>白領的「完美隱形」術</h3>
+    <p>假設你昨天是一個在科技公司領 120 萬年薪的專案經理，今天被裁員了。你如果去登記失業，要走繁瑣的手續，還會在履歷上留下記錄。但你如果當天就去註冊 Uber 開始接單，你的履歷表面上完全沒有斷——你從「專案經理」直接變成「自雇者」，失業統計完全感應不到你。</p>
+    <p style="margin:0; color:var(--muted); font-size:0.88rem;">除了 Uber，DoorDash、Instacart、TaskRabbit、Fiverr、Amazon Flex 這些平台過去五年都在快速成長，加總起來的人數遠超過 Uber 那 300 萬。美國實際上可能有 500 萬到 800 萬人從正規就業「滑落」到零工經濟裡，在統計上仍算就業者。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════ TRIANGLE -->
+<section id="triangle">
+  <div class="section-tag">第二部分</div>
+  <h2>⚖️ 平台經濟的「三角擠壓」</h2>
+
+  <p>零工平台的商業模式，本質上是一個三角關係：<strong>消費者、司機（服務提供者）、平台本身</strong>。這個三角在五年前跟現在，結構已完全不同。</p>
+
+  <div class="compare">
+    <div class="compare-col left">
+      <div class="ch">五年前（燒錢擴張期）</div>
+      <p>投資人大量燒錢補貼三方：消費者吃一餐外送比自己煮還便宜，司機每一單都賺得比最低工資多，平台每季虧損幾千萬——先把生態建立起來，再想辦法賺錢。</p>
+    </div>
+    <div class="compare-col right">
+      <div class="ch">現在（獲利轉型期）</div>
+      <p>高利率環境把投資人的錢收緊，所有平台被迫從「搶市場」轉成「要獲利」。只有三條路可走：提高消費者價格、降低給司機的抽成、降低餐廳抽成。</p>
+    </div>
+  </div>
+
+  <div class="highlight" data-icon="💡 邏輯核心">
+    <p><strong>平台最終選擇擠壓司機</strong>——因為司機是三方中最容易被替換的一群。消費者一旦漲價太高就直接不叫了；餐廳如果被抽太狠，會跑去別的平台或自己建立系統。但司機沒有退路，要麼繼續開，要麼失去收入，而外面還有源源不斷的新人在排隊填補。</p>
+  </div>
+
+  <h3 style="margin-top:2rem;">財報數據佐證</h3>
+  <table>
+    <tr>
+      <th>指標</th>
+      <th>過去兩年數字</th>
+      <th>對司機的影響</th>
+    </tr>
+    <tr>
+      <td>Uber 總營收成長</td>
+      <td style="color:var(--green)">+35%</td>
+      <td rowspan="2" style="color:var(--red)">平均每位司機能分到的錢大幅縮水</td>
+    </tr>
+    <tr>
+      <td>Uber 活躍司機數成長</td>
+      <td style="color:var(--red)">+80%</td>
+    </tr>
+    <tr>
+      <td>平台抽成比例</td>
+      <td style="color:var(--red)">15% → 30%+（部分地區）</td>
+      <td>司機實際拿到的錢斷崖式下跌</td>
+    </tr>
+  </table>
+
+  <div class="card red">
+    <h3>🇺🇸 洛杉磯 Uber 司機的真實截圖案例</h3>
+    <p>一張 <strong style="color:var(--gold)">$64 美元</strong>的車資，司機最後實際拿到的是 <strong style="color:var(--red)">$12.43</strong>——不足 20%，平台拿走了超過 80%。</p>
+  </div>
+
+  <div class="card">
+    <h3>小費從「俗氣」到「預設強推」的 180 度翻轉</h3>
+    <p>五年前 Uber 的官方立場是「小費這件事非常俗氣，不應該存在於他們的平台上」，行銷重點是司機加 APP 就能順暢完成交易。但過去兩年，每一次轎車或叫外送，平台都會在結帳頁面強力推薦打賞小費，預設金額從 15% 起跳。</p>
+    <p style="margin:0; color:var(--muted); font-size:0.88rem;">平台給司機的錢越來越少，所以需要讓消費者自願補足那個差額——而多數人根本沒注意到，小費已經從「加分選項」變成「默認動作」。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════ TAIWAN -->
+<section id="taiwan">
+  <div class="section-tag">第三部分</div>
+  <h2>🛵 台灣外送員大軍——中產崩塌的縮影</h2>
+
+  <div class="big-stat" style="border-color:var(--green)">
+    <span class="num" style="color:var(--green)">20萬+</span>
+    <span class="desc">2018 年到 2023 年，台灣外送員人數暴增至 20 萬以上</span>
+  </div>
+
+  <p>這其中有非常高比例的人是從原本的正規工作轉來的：媒體從業者、餐飲業者、船產員工、計程車司機——在原本的工作崩掉或縮邊的時候，第一反應就是去註冊 Food Panda 或 Uber Eats。</p>
+
+  <h3 style="margin-top:1.5rem;">為什麼外送這麼吸引人？</h3>
+  <div class="three-cols">
+    <div class="col-card">
+      <span class="icon">⚡</span>
+      <h4>入門門檻極低</h4>
+      <p>有機車有駕照填個表，當天就可以開始接單</p>
+    </div>
+    <div class="col-card">
+      <span class="icon">🕐</span>
+      <h4>時間高度彈性</h4>
+      <p>想工作就工作，不想工作就停，沒有排班壓力</p>
+    </div>
+    <div class="col-card">
+      <span class="icon">💵</span>
+      <h4>現金流快</h4>
+      <p>每週結算，對急需收入的人幾乎是天降甘霖</p>
+    </div>
+  </div>
+
+  <p style="margin-top:1.5rem;">你在台灣街上看到越來越多粉色、綠色外送員飛馳而過，你以為這是服務業蓬勃發展的訊號——但如果你了解這些人的來源，你會發現這其實是<strong>一整個世代中產勞動力的悄悄崩塌</strong>。</p>
+
+  <h3 style="margin-top:2rem;">收入崩壞的時間軸</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot green">18</div>
+      <div>
+        <strong style="color:#fff;">2018 年：大量湧入</strong>
+        <p>外送平台進入台灣市場，大量招募外送員，初期收入尚可，吸引各行業失業者加入。</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--gold); color:var(--gold)">22</div>
+      <div>
+        <strong style="color:#fff;">2022 年：收入開始縮水</strong>
+        <p>Food Panda 開始調整獎金結構，同樣的單價、同樣的距離，司機拿到的錢比 2021 年少了兩到三成。Uber Eats 情況類似。</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot red">現</div>
+      <div>
+        <strong style="color:#fff;">目前：隱性失業者</strong>
+        <p>有些外送員每天騎十小時，月收入比一年前少了五千到一萬元台幣。可是他們又離不開這份工作，因為原本的正職已不復存在。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight danger" data-icon="⚠️ 真相">
+    <p>這個現象幾乎沒有出現在主流新聞裡，因為從表面的失業率數字來看，他們是「就業者」，不是問題。只有當你深入個體經濟處境，才會發現這些人其實是<strong>「隱性失業者」</strong>——形式上有工作，實質上賺不到足夠養活自己的錢。</p>
+    <p style="margin-top:0.5rem; margin-bottom:0;">這就是為什麼台灣民眾對經濟的體感，與官方公佈的失業率數字之間差距如此之大。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════ CHINA -->
+<section id="china">
+  <div class="section-tag">第四部分</div>
+  <h2>🌏 中國的未來預警——走到極端的樣貌</h2>
+
+  <p>如果你想知道這個趨勢走到極端會變成什麼樣子，中國已經給了我們一個完整的樣本。</p>
+
+  <div class="two-stats">
+    <div class="big-stat" style="border-color:var(--red)">
+      <span class="num" style="color:var(--red)">2億</span>
+      <span class="desc">中國 Gig 工總數（估計）<br><small style="color:var(--muted)">台灣人口的 8 倍以上</small></span>
+    </div>
+    <div class="big-stat" style="border-color:var(--gold)">
+      <span class="num" style="color:var(--gold)">40%</span>
+      <span class="desc">佔都市總勞動力比例<br><small style="color:var(--muted)">每十個城市人就有四個是 Gig 工</small></span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:1rem;">中國為什麼走到這一步？三個疊加原因</h3>
+
+  <div class="steps" style="margin-top:1rem;">
+    <div class="step">
+      <div class="step-num red">1</div>
+      <div class="step-body">
+        <strong>青年失業率飆上歷史高點</strong>
+        <p>2023 年夏天官方公佈的 16–24 歲青年失業率達 <strong>21.3%</strong>，全球震驚。這個數字公佈後，中國政府於 2023 年 8 月宣布「為了優化統計方法」暫停公佈，暫停長達五個月。2024 年 1 月重新公佈時，定義已被調整，新數字看起來沒那麼慘——但學術界普遍認為真實情況仍在惡化。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num red">2</div>
+      <div class="step-body">
+        <strong>房地產業鏈崩塌</strong>
+        <p>桂花、恆大這些大型開發商連環爆雷，產業鏈上下數百萬個工作消失。這批人的技能很專一，轉行極度困難，大量人口最後選擇送外賣、開網約車。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num red">3</div>
+      <div class="step-body">
+        <strong>消費降級</strong>
+        <p>中國家庭在過去三年變得非常節儉，減少了大量服務類消費。這讓平台訂單量的成長跟不上 Gig 工數量的成長速度，結果就是個別 Gig 工的收入被進一步壓縮。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card red" style="margin-top:1.5rem;">
+    <h3>中國主要城市的真實畫面</h3>
+    <p>商場、寫字樓、大學門口都固定出現大批穿著美團黃色、餓了麼藍色制服的外送員，整天坐在地上等待。根據報導，他們平均每天在線十小時，但實際可以跑的單只夠賺到三小時前的收入水平。競爭激烈到什麼程度？有些地方甚至出現不同平台的司機在街上打架搶單的新聞。</p>
+    <p style="margin:0; color:var(--muted); font-size:0.88rem;">更令人警醒的是：這批人的去向已經不只是臨時緩衝了。很多人一做就是三年、五年，沒有能力也沒有路徑回到正規就業市場。他們的技能沒有累積、社會保險沒有繳、沒有工會、沒有退休金、沒有晉升管道。等到 50 歲騎不動機車的那一天，手上沒有任何可以繼續工作的籌碼。</p>
+  </div>
+
+  <blockquote>中國這個故事，值得美國、台灣任何地方好好看一遍——因為我們走的是同一條路，只是目前走在半路上，還沒到終點。</blockquote>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════ AI -->
+<section id="ai">
+  <div class="section-tag">第五部分</div>
+  <h2>🤖 Robotaxi 與 AI——最後緩衝區即將消失</h2>
+
+  <p>如果你覺得現在已經夠慘了，下面這段會讓你知道原來還能更慘。</p>
+
+  <h3>Robotaxi：從實驗進入真實商業運營</h3>
+
+  <div class="card blue" style="margin-bottom:1rem;">
+    <div class="tags" style="margin-bottom:0.8rem;">
+      <span class="tag blue">Tesla（美國多城市）</span>
+      <span class="tag blue">Waymo（舊金山 · 洛杉磯 · 鳳凰城）</span>
+      <span class="tag blue">百度 Apollo（武漢 · 北京 · 上海）</span>
+    </div>
+    <p style="margin:0;">跟上一代自駕車吹牛時代不一樣，這次的技術是<strong>真的可以上街、真的可以載客、真的可以收錢</strong>的。</p>
+  </div>
+
+  <h3>為什麼這對司機是存亡威脅？</h3>
+  <table>
+    <tr>
+      <th>比較項目</th>
+      <th>人類司機</th>
+      <th>Robotaxi</th>
+    </tr>
+    <tr>
+      <td>薪水</td>
+      <td>需要支付</td>
+      <td style="color:var(--green)">無</td>
+    </tr>
+    <tr>
+      <td>休息時間</td>
+      <td>法定需休息</td>
+      <td style="color:var(--green)">24 小時持續運行</td>
+    </tr>
+    <tr>
+      <td>小費糾紛</td>
+      <td>存在</td>
+      <td style="color:var(--green)">無</td>
+    </tr>
+    <tr>
+      <td>保險成本</td>
+      <td>高</td>
+      <td style="color:var(--green)">低</td>
+    </tr>
+    <tr>
+      <td>估算運營成本</td>
+      <td>100%</td>
+      <td style="color:var(--green)">僅 20–30%</td>
+    </tr>
+  </table>
+
+  <div class="highlight danger" data-icon="⚠️ 平台早已宣告">
+    <p>平台已多次公開說明，長期目標就是<strong>把所有人類司機換成自駕車</strong>。他們花了十幾年訓練消費者接受「透過 APP 叫車」這件事，現在只要把前端 UI 完全不變，後端換成自駕車，就完成了整個產業的機器替代。當年聽起來很遙遠，現在技術已經到了門口。</p>
+  </div>
+
+  <h3 style="margin-top:2rem;">AI 衝擊更廣泛的 Gig 市場</h3>
+  <p>被衝擊的不只是司機。零工經濟涵蓋的範圍比你想像中廣泛，而 AI 正在多點同時進攻：</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num blue">🎨</div>
+      <div class="step-body">
+        <strong>低階設計工作</strong>
+        <p>Etsy 上的手工品原創設計正在被 AI 生成圖像大規模衝擊，平台上大量低階設計、AI 做的貼紙、AI 生成的圖像，正在淹沒人工創作。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num blue">✍️</div>
+      <div class="step-body">
+        <strong>翻譯、文案、簡單程式碼</strong>
+        <p>Fiverr 上大量的低階翻譯、簡單文案、初階程式撰寫工作，正在被 GPT 類模型快速取代，外包市場正在萎縮。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num blue">📦</div>
+      <div class="step-body">
+        <strong>配送物流</strong>
+        <p>小型自動配送機器人已在多個城市開始運行測試，外送「最後一哩路」的自動化正在逐步實現。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card red">
+    <h3>雙重跌落的困境</h3>
+    <p>這整群人，他們當初是從正規就業「跌落」到 Gig 經濟裡，現在他們即將從 Gig 經濟再「跌落」一次——跌到哪裡，不知道。</p>
+    <p style="margin:0; color:var(--muted); font-size:0.88rem;">這也是為什麼經濟學家越來越擔心「技術性失業」的新浪潮。上一輪工業革命，人們從農場走到工廠、從工廠走到辦公室，每次都有新的工作在等他們。這一輪不一樣——AI 與自動化同時攻擊低階與中階工作，新的工作也許會出現，但不確定夠不夠，也不確定現在被取代的人有沒有能力轉型過去。</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ════════════════════════════════════════ TAKEAWAYS -->
+<section id="takeaways">
+  <div class="section-tag">第六部分 · 結論</div>
+  <h2>💡 三個應對觀念</h2>
+
+  <p>這不是一個悲觀預言，這是一個正在發生的結構變動。重點不在於你能不能擋下他——這種級別的趨勢，單一個人擋不了。重點在於你對它的認知。</p>
+
+  <div style="margin-top:2rem;">
+
+    <div class="takeaway-card">
+      <div class="takeaway-num" style="background:var(--blue); color:#0d1b2a;">1</div>
+      <div class="takeaway-body">
+        <span class="tkey" style="background:rgba(75,191,232,0.15); color:var(--blue); border:1px solid var(--blue)">看穿統計</span>
+        <h3>重新解讀失業率</h3>
+        <p>失業率這個數字，測量的是「有沒有任何工作」，不測量「這份工作夠不夠活下去」。未來看到失業率新低的時候，要同時去看的是：<strong>中位數薪資、Gig 工佔比、多重兼職率</strong>這些數字。官方不會主動把這些疊在失業率旁邊，因為那樣就不好看了。</p>
+      </div>
+    </div>
+
+    <div class="takeaway-card">
+      <div class="takeaway-num" style="background:var(--gold); color:#0d1b2a;">2</div>
+      <div class="takeaway-body">
+        <span class="tkey" style="background:rgba(232,184,75,0.15); color:var(--gold); border:1px solid var(--gold)">技能複利</span>
+        <h3>追求「技能複利」型工作</h3>
+        <p>Gig 經濟最大的問題不是薪水低，是你做五年跟做一年幾乎沒差。一個軟體工程師、律師、醫生，做十年跟做一年的市場價格完全不同——這叫做<strong>技能複利</strong>。一個 Uber 司機做十年與做一年，市場價格幾乎一樣。選擇工作類型時，要選有技能複利的那種，不要落進沒有任何累積的陷阱。</p>
+      </div>
+    </div>
+
+    <div class="takeaway-card">
+      <div class="takeaway-num" style="background:var(--red); color:#fff;">3</div>
+      <div class="takeaway-body">
+        <span class="tkey" style="background:rgba(224,92,92,0.15); color:var(--red); border:1px solid var(--red)">脫離計畫</span>
+        <h3>設定明確的脫離計畫</h3>
+        <p>如果你目前已在 Gig 經濟裡，要主動規劃一個出口。不是明天、不是下週，但要在兩到三年之內脫離這個結構。把這份工作當成<strong>短期緩衝</strong>，不要把它當成長期身份。這段時間要做的事，是累積某一項可以延續一輩子的技能——不管是寫程式、做設計、理解金融、創作——總之要有一個東西可以帶你走出去，因為 Robotaxi 來的那一天，這個緩衝區會直接消失。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="highlight" data-icon="🎯 最後的問題" style="margin-top:2.5rem;">
+    <p>你身邊有沒有認識的人，過去五年從正規職場轉入 Gig 經濟？他們現在過得怎麼樣？這個答案，比任何一個失業率數字都更誠實。</p>
+  </div>
+
+  <hr class="divider">
+
+  <h3 style="text-align:center; margin-bottom:1.5rem;">📌 全文重點整理</h3>
+
+  <table>
+    <tr>
+      <th>主題</th>
+      <th>核心洞見</th>
+    </tr>
+    <tr>
+      <td>統計漏洞</td>
+      <td>只要有任何薪水進帳就算就業，Gig 工完美躲過失業統計</td>
+    </tr>
+    <tr>
+      <td>數字對照</td>
+      <td>美國失業↓300萬 ≈ Uber 司機↑300萬，幾乎完全抵消</td>
+    </tr>
+    <tr>
+      <td>三角擠壓</td>
+      <td>平台從「燒錢補貼」轉向「追求獲利」，司機是最容易被犧牲的那一方</td>
+    </tr>
+    <tr>
+      <td>台灣現況</td>
+      <td>20 萬外送員背後是一整個世代中產勞動力的悄悄崩塌</td>
+    </tr>
+    <tr>
+      <td>中國預警</td>
+      <td>2 億 Gig 工、佔都市勞動力 40%，已走到極端的殘酷樣貌</td>
+    </tr>
+    <tr>
+      <td>AI 衝擊</td>
+      <td>Robotaxi 商業化 + AI 取代低中階工作，「最後緩衝區」即將消失</td>
+    </tr>
+    <tr>
+      <td>應對方向</td>
+      <td>看穿統計數字 · 追求技能複利 · 設定脫離計畫</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════ FOOTER -->
+<footer>
+  <p style="font-size:1.2rem; margin-bottom:0.5rem;">低失業率 ≠ 人人有好工作</p>
+  <p style="color:var(--muted)">零工是緩衝，不是出路。在結構性變動的時代，洞察力就是你的護城河。</p>
+  <p style="margin-top:1.5rem;">
+    <strong>技能複利</strong> &nbsp;×&nbsp; <strong>脫離計畫</strong> &nbsp;×&nbsp; <strong>看穿統計</strong>
+  </p>
+  <p style="margin-top:1.5rem; font-size:0.78rem;">根據「失業率的真相與零工經濟的潛在危機」影片逐字稿整理製作</p>
+</footer>
+
+<script>
+  // Progress bar
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
